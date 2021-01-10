@@ -1,5 +1,6 @@
-function GameOfLife(canvas) {
+function GameOfLife(canvas, genDiv) {
     this.canvas = canvas;
+    this.genDiv = genDiv;
     this.context = canvas.getContext("2d");
     this.stop = true;
     this.speed = 500;
@@ -27,6 +28,7 @@ function GameOfLife(canvas) {
         }
     }
     this.clear = function() {
+        this.genDiv.innerText = 0;
         this.create(this.width, this.height);
         this.stop = true;
     }
@@ -73,6 +75,7 @@ function GameOfLife(canvas) {
         }
     }
     this.turn = function() {
+        this.genDiv.innerText = parseInt(this.genDiv.innerText) + 1;
         this.check();
         for (const y in this.cells) {
             let row = this.cells[y];
@@ -165,7 +168,8 @@ function Cell(x, y) {
         let stroke = (alive) ? "#2c3e50" : "#ecf0f1";
         let fill   = (alive) ? "#ecf0f1" : "#2c3e50";
         context.strokeStyle= stroke;
-            
+        
+        context.clearRect(this.x*size, this.y*size, size-1, size-1);
         context.strokeRect(this.x*size, this.y*size, size-1, size-1);
         
         context.fillStyle= fill;

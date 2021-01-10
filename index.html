@@ -37,6 +37,9 @@
             position: fixed;
             top: 0;
             left: 0;
+            padding: 10px;
+            background-color: #95a5a6;
+            border-radius: 0 0 5px 0;
         }
         button {
             margin: 10px 5px;
@@ -88,21 +91,26 @@
         <button id='run'>Run</button>
         <button id="step">Step</button>
         <button id="clear">Clear</button>
-        <label for="templates">Templates</label>
+        <label for="templates">Template:</label>
         <select id="templates">
             <option value="none" selected>None</option>
         </select>
-        <input type="range" min="50" max="1000" id='speed'>
+        <div style="display: inline-block; color: white">
+            Speed: <input type="range" min="50" max="1000" id='speed'>
+        </div>
+        <div style="display: inline-block; color: white">
+            Generation: <p id='gen'>0<p>
+        </div>
     </div>
     <script src="includes/GameOfLife.js"></script>
     <script src="includes/templates.js"></script>
     <script>
-            let game = new GameOfLife(document.getElementById("app"));
+            let game = new GameOfLife(document.getElementById("app"), document.getElementById("gen"));
             let runBtn = document.getElementById("run");            
             game.create(100,50);
 
             document.getElementById("speed").onchange = (event) => {
-
+            
 
                 let val = event.target.value;
                 if (game.stop == false) {
