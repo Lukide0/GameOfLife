@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umělý život</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+
+        table {
+            border-spacing: 0;
+        }
+        td {
+            border: 2px solid black;
+            width: 25px;
+            height: 25px;
+        }
+        tr {
+            border: 2px solid black;
+        }
+
+        td.alive {
+            background-color: aqua;
+        }
+        html, body {
+            width: 100vw;
+            overflow-y: hidden;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #tools {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        button {
+            margin: 10px 5px;
+            padding: 5px 10px;
+            background-color: #2980b9;
+            border: 0;
+            border-radius: 5px;
+            font-size: 18px;
+            color: #ecf0f1;
+        }
+        button:hover {
+            background-color: #3498db;
+        }
+        #run {
+            background-color: #27ae60!important;
+        }
+
+        #run:hover {
+            background-color: #2ecc71!important;
+        }
+        #clear {
+            background-color: #f39c12;
+        }
+
+        #clear:hover {
+            background-color: #e67e22;
+        }
+
+        #run.stop {
+            background-color: #c0392b !important;
+        }
+
+        #run.stop:hover {
+            background-color: #e74c3c !important;
+        }
+
+        #app {
+            margin-top: -50px;
+            margin-left: -50px;
+        }
+        label {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="app"></canvas>
+    <div id='tools'>
+        <button id='run'>Run</button>
+        <button id="step">Step</button>
+        <button id="clear">Clear</button>
+        <label for="templates">Templates</label>
+        <select id="templates">
+            <option value="none" selected>None</option>
+        </select>
+        <input type="range" min="50" max="1000" id='speed'>
+    </div>
+    <script src="includes/GameOfLife.js"></script>
+    <script src="includes/templates.js"></script>
+    <script>
+            let game = new GameOfLife(document.getElementById("app"));
+            let runBtn = document.getElementById("run");            
+            game.create(100,50);
+
+            document.getElementById("speed").onchange = (event) => {
+
+
+                let val = event.target.value;
+                if (game.stop == false) {
+                    game.stop = true;
+                    clearInterval(game.timer);
+                    game.speed = val;
+                    game.run();
+                    game.stop = false;
+                } else {
+                    game.speed = val;
+                }
+            }
+            
+            runBtn.onclick = () => {
+                if (game.stop == true) {
+                    game.run();
+                    game.stop = false;
+                    runBtn.innerText = "Stop";
+                    runBtn.classList.add("stop");
+                }
+                else {
+                    clearInterval(game.timer);
+                    game.stop = true;
+                    runBtn.innerText = "Run";
+                    runBtn.classList.remove("stop");
+                } 
+            }
+            
+            document.getElementById("step").onclick = () => {
+                game.turn();
+            }
+            
+            document.getElementById("clear").onclick = () => {
+                game.clear();
+            }
+            let templates = new Templates(game);
+
+
+            let select = document.getElementById("templates")
+            
+            for (const template in templates.templates) {
+                let option = document.createElement("option");
+                option.value = template;
+                option.innerText = template;
+
+                select.appendChild(option);
+            }
+
+
+            select.onchange = (event)=> {
+                let val = event.target.value;
+
+                templates.use(val);
+            }
+            
+            </script>
+</body>
+</html>
